@@ -45,13 +45,41 @@ let questions = [
   const qSection = document.getElementById("question-section");
   const aSection = document.getElementById("answer-section");
   const startButton = document.getElementById("start-button");
+  const timerSection = document.getElementById("timer-section");
 startButton.addEventListener("click", startQuiz);
+
+let quizEnded = false;
+
+let secondsLeft = 100;
+
+function setTime() {
+  // Sets interval in variable
+  const timerInterval = setInterval(function() {
+    secondsLeft--;
+    timerSection.textContent = secondsLeft + " seconds left";
+
+    if(secondsLeft <= 0) {
+      // Stops execution of action at set interval
+      clearInterval(timerInterval);
+      // Calls function to create and append image
+      endQuiz();
+
+    } if (quizEnded) {
+        clearInterval(timerInterval);
+    }
+  }, 1000);
+}
 
 let currentQuestionNumber = 0;
 
 let questionAnswered = false;
 
 function startQuiz(){
+    setTime();
+    continueQuiz();
+}
+
+function continueQuiz(){
     questionAnswered = false;
     startButton.style.display = "none";
     const cQuestionObj = questions[currentQuestionNumber]
@@ -85,6 +113,7 @@ function answerButtonLister(e){
         const incorrectAnswer = document.createElement("h3");
         aSection.appendChild(incorrectAnswer);
         incorrectAnswer.textContent = "You got it wrong!"
+        secondsLeft = secondsLeft-20;
     }
     nextButton = document.createElement("button");
     nextButton.textContent = "Next Question";
@@ -100,14 +129,20 @@ function nextQuestion(){
     if(currentQuestionNumber==questions.length) {
         endQuiz();
     } else {
-        startQuiz();
+        continueQuiz();
     }
-    
 }
 
 function endQuiz() {
+
+    // TODO: deal with scoring
+    // TODO: deal with time out
+    // timerSection.innerHTML = "";
     console.log("quiz is ending");
+    quizEnded = true;
 }
+
+
 
 // function beginQuiz(){
 
