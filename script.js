@@ -49,7 +49,10 @@ startButton.addEventListener("click", startQuiz);
 
 let currentQuestionNumber = 0;
 
+let questionAnswered = false;
+
 function startQuiz(){
+    questionAnswered = false;
     startButton.style.display = "none";
     const cQuestionObj = questions[currentQuestionNumber]
     const qDiv = document.createElement("div");
@@ -67,8 +70,11 @@ function startQuiz(){
 }
 
 function answerButtonLister(e){
+    if(questionAnswered){
+        return;
+    }
     console.log(e.target);
-    if(e.target.textContent == "c. both a and b") {
+    if(e.target.textContent == questions[currentQuestionNumber].correct) {
         console.log("you are correct")
         const correctAnswer = document.createElement("h3");
         aSection.appendChild(correctAnswer);
@@ -84,12 +90,24 @@ function answerButtonLister(e){
     nextButton.textContent = "Next Question";
     aSection.appendChild(nextButton);
     nextButton.addEventListener("click", nextQuestion);
+    questionAnswered = true;
 }
 
 function nextQuestion(){
+    qSection.innerHTML = "";
+    aSection.innerHTML = "";
+    currentQuestionNumber++;
+    if(currentQuestionNumber==questions.length) {
+        endQuiz();
+    } else {
+        startQuiz();
+    }
     
 }
 
+function endQuiz() {
+    console.log("quiz is ending");
+}
 
 // function beginQuiz(){
 
