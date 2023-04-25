@@ -46,27 +46,29 @@ let questions = [
   const aSection = document.getElementById("answer-section");
   const startButton = document.getElementById("start-button");
   const timerSection = document.getElementById("timer-section");
+  const scoreSection = document.getElementById("score-section");
 startButton.addEventListener("click", startQuiz);
 
 let quizEnded = false;
 
-let secondsLeft = 100;
+let secondsLeft = 10;
 
 function setTime() {
   // Sets interval in variable
   const timerInterval = setInterval(function() {
     secondsLeft--;
-    timerSection.textContent = secondsLeft + " seconds left";
-
+    
     if(secondsLeft <= 0) {
       // Stops execution of action at set interval
       clearInterval(timerInterval);
       // Calls function to create and append image
+      secondsLeft=0;
       endQuiz();
 
     } if (quizEnded) {
         clearInterval(timerInterval);
     }
+    timerSection.textContent = secondsLeft + " seconds left";
   }, 1000);
 }
 
@@ -134,15 +136,37 @@ function nextQuestion(){
 }
 
 function endQuiz() {
-
+    qSection.innerHTML = "";
+    aSection.innerHTML = "";
     // TODO: deal with scoring
-    // TODO: deal with time out
     // timerSection.innerHTML = "";
     console.log("quiz is ending");
     quizEnded = true;
+    setScore();
+}
+
+function setScore(){
+    const scoreNumber = document.createElement("h4");
+    scoreNumber.textContent = secondsLeft;
+    scoreSection.appendChild(scoreNumber);
+    timerSection.innerHTML = "";
+    const enterInitials = document.createElement("input");
+    scoreSection.appendChild(enterInitials);
+    const submitButton = document.createElement("button");
+    submitButton.innerHTML = "Submit";
+    scoreSection.appendChild(submitButton);
+    submitButton.addEventListener("click", initialSubmit);
+    function initialSubmit(e){
+        const initials = enterInitials.value;
+        const bob = {
+            name: initials,
+            score: secondsLeft
+        }
+        localStorage.setItem("highscores", JSON.stringify(bob));
 }
 
 
+}
 
 // function beginQuiz(){
 
