@@ -41,13 +41,22 @@ let questions = [
     }
   ];
 
+  const hSection = document.getElementById("header-section");
   const sSection = document.getElementById("start-section");
   const qSection = document.getElementById("question-section");
   const aSection = document.getElementById("answer-section");
   const startButton = document.getElementById("start-button");
   const timerSection = document.getElementById("timer-section");
   const scoreSection = document.getElementById("score-section");
+  const hScoreSection = document.getElementById("highscore-section");
 startButton.addEventListener("click", startQuiz);
+
+hScoreSection.innerHTML = "";
+
+const seeHighscores = document.createElement("button");
+seeHighscores.textContent = "See Highscores";
+hSection.appendChild(seeHighscores);
+seeHighscores.addEventListener("click", goToHighScores);
 
 let quizEnded = false;
 
@@ -162,11 +171,66 @@ function setScore(){
             name: initials,
             score: secondsLeft
         }
-        localStorage.setItem("highscores", JSON.stringify(bob));
+        localStorage.setItem("lastHighscore", JSON.stringify(bob));
+        scoreSection.innerHTML="";
+        let highScoreList = [];
+        const oldHighScoreList = JSON.parse(localStorage.getItem("highscores"));
+        console.log(oldHighScoreList);
+        highScoreList.push(bob);
+        if(oldHighScoreList){
+            highScoreList = highScoreList.concat(oldHighScoreList);
+            localStorage.setItem("highscores", JSON.stringify(highScoreList))
+            console.log(highScoreList);
+        }
+        localStorage.setItem("highscores", JSON.stringify(highScoreList))
+        displayScores(); 
+    }
+
 }
 
-
+function displayScores(){
+    console.log("display scores now")
+    const scoreData = JSON.parse(localStorage.getItem("lastHighscore"));
+    console.log(scoreData);
+    const finalScore = document.createElement("h5");
+    scoreSection.appendChild(finalScore);
+    finalScore.textContent = scoreData.name + ":" + scoreData.score;
 }
+
+function goToHighScores(){
+    console.log(hScoreSection);
+
+    console.log(hScoreSection.textContent.includes("Highscores:"))
+    //scoreSection.innerHTML = "This is some text";
+    if(hScoreSection.textContent.includes("Highscores:")){
+        console.log(true);
+        hScoreSection.textContent="";
+    } else {
+        console.log(false);
+        hScoreSection.textContent = "Highscores:";
+        const scoreData = JSON.parse(localStorage.getItem("highscores"));
+        console.log(scoreData);
+        // TODO: deal with this being an array
+        if(scoreData) {
+            for(i=0;i<scoreData.length;i++){
+            const finalScore = document.createElement("h5");
+            hScoreSection.appendChild(finalScore);
+            finalScore.textContent = scoreData[i].name + ":" + scoreData[i].score;
+        }
+        } 
+
+    }
+}
+
+    // if(hScoreSection.textContent){
+    //     hScoreSection.textContent = "Hi";
+    //     console.log("true");
+    // } else {
+    //     hScoreSection.textContent="";
+    //     console.log("false");
+    // }
+// }
+
 
 // function beginQuiz(){
 
