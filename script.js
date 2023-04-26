@@ -1,8 +1,9 @@
+// These are my questions, answers, and correct answers
 let questions = [
     {
-      "question": "Which of the following key words is used to define variables in JavaScript?",
-      "answers": ["a. const", "b. let", "c. both a and b", "d. none of the above"],
-      "correct": "c. both a and b"
+        "question": "Which of the following key words is used to define variables in JavaScript?",
+        "answers": ["a. const", "b. let", "c. both a and b", "d. none of the above"],
+        "correct": "c. both a and b"
     },
     {
         "question": "What does a JavaScript loop do?",
@@ -39,217 +40,172 @@ let questions = [
         "answers": ["a. a predetermined variable within a JavaScript page", "b. an event that occurs inside of JavaScript, but is not displayed on screen", "c. a block of JavaScript code that can be executed when 'called' for", "d. the link between JavaScript, HTML, and CSS"],
         "correct": "c. a block of JavaScript code that can be executed when 'called' for"
     }
-  ];
+];
 
-  const hSection = document.getElementById("header-section");
-  const sSection = document.getElementById("start-section");
-  const qSection = document.getElementById("question-section");
-  const aSection = document.getElementById("answer-section");
-  const startButton = document.getElementById("start-button");
-  const timerSection = document.getElementById("timer-section");
-  const scoreSection = document.getElementById("score-section");
-  const hScoreSection = document.getElementById("highscore-section");
-startButton.addEventListener("click", startQuiz);
+// Getting sections from HTML to use dynamically
+const hSection = document.getElementById("header-section");
+const sSection = document.getElementById("start-section");
+const qSection = document.getElementById("question-section");
+const aSection = document.getElementById("answer-section");
+const startButton = document.getElementById("start-button");
+const timerSection = document.getElementById("timer-section");
+const scoreSection = document.getElementById("score-section");
+const hScoreSection = document.getElementById("highscore-section");
 
-hScoreSection.innerHTML = "";
+startButton.addEventListener("click", startQuiz); //When start button is clicked, startQuiz function is called
 
-const seeHighscores = document.createElement("button");
-seeHighscores.textContent = "See Highscores";
-hSection.appendChild(seeHighscores);
-seeHighscores.addEventListener("click", goToHighScores);
+hScoreSection.innerHTML = ""; //set high score section text to nothing
 
-let quizEnded = false;
+const seeHighscores = document.createElement("button"); //create button to see high scores
+seeHighscores.textContent = "See Highscores"; //add text to button
+hSection.appendChild(seeHighscores); //add button to html document
+seeHighscores.addEventListener("click", goToHighScores); //when highscores button is clicked, call goToHighScores function
 
-let secondsLeft = 10;
+let quizEnded = false; //set quiz end to false
+
+let secondsLeft = 180; //set time start countdown
 
 function setTime() {
-  // Sets interval in variable
-  const timerInterval = setInterval(function() {
-    secondsLeft--;
-    
-    if(secondsLeft <= 0) {
-      // Stops execution of action at set interval
-      clearInterval(timerInterval);
-      // Calls function to create and append image
-      secondsLeft=0;
-      endQuiz();
+    const timerInterval = setInterval(function () { //set function to a variable
+        secondsLeft--; //countdown by 1
 
-    } if (quizEnded) {
-        clearInterval(timerInterval);
-    }
-    timerSection.textContent = secondsLeft + " seconds left";
-  }, 1000);
-}
+        if (secondsLeft <= 0) { //if seconds left is less than or equal to 0
+            clearInterval(timerInterval); //stop the timer
+            secondsLeft = 0; //set seconds left to zero in case the timer went below 0
+            endQuiz(); //call endQuiz function
 
-let currentQuestionNumber = 0;
+        } if (quizEnded) { //if quizEnded variable is set to true
+            clearInterval(timerInterval); //stop the timer
+        };
+        timerSection.textContent = secondsLeft + " seconds left"; //display text of timer on screen
+    }, 1000); //this function will run every second (or 1000 milliseconds)
+};
 
-let questionAnswered = false;
+let currentQuestionNumber = 0; //sets current question number to 0 to be used as index
 
-function startQuiz(){
-    setTime();
-    continueQuiz();
-}
+let questionAnswered = false; //sets question answered to false (global)
 
-function continueQuiz(){
-    questionAnswered = false;
-    startButton.style.display = "none";
-    const cQuestionObj = questions[currentQuestionNumber]
-    const qDiv = document.createElement("div");
-    qSection.appendChild(qDiv);
-    const qH1 = document.createElement("h1");
-    qDiv.appendChild(qH1);
-    qH1.textContent = cQuestionObj.question;
-    for(i=0;i<cQuestionObj.answers.length;i++) {
-    const aBtn = document.createElement("button");
-    qH1.appendChild(aBtn);
-    aBtn.textContent = cQuestionObj.answers[i];
-    aBtn.addEventListener("click", answerButtonLister);
+function startQuiz() { //this is called when start quiz button is hit
+    setTime(); //start the timer
+    continueQuiz(); //call continueQuiz function
+};
+
+function continueQuiz() {
+    questionAnswered = false; //set questionAnswered to false
+    startButton.style.display = "none"; //remove startButton from screen
+    const cQuestionObj = questions[currentQuestionNumber]; //sets current question in object
+    const qDiv = document.createElement("div"); //create div for question
+    qSection.appendChild(qDiv); //add question to question section
+    const qH1 = document.createElement("h1"); //add header element for question to display
+    qDiv.appendChild(qH1); //add header element to question div
+    qH1.textContent = cQuestionObj.question; //set header text content to display the current question
+    for (i = 0; i < cQuestionObj.answers.length; i++) { //loop to repeat over the number of answers in the current question object
+        const aBtn = document.createElement("button"); //create a button
+        qH1.appendChild(aBtn); //add button to h1 element with question displayed
+        aBtn.textContent = cQuestionObj.answers[i]; //set text to button with answer text
+        aBtn.addEventListener("click", answerButtonLister); //when you click the button, answerButtonListener is called
     };
-    
 }
 
-function answerButtonLister(e){
-    if(questionAnswered){
+function answerButtonLister(e) { //function with event to target
+    if (questionAnswered) { //if question answered is true, exit function
         return;
     }
     console.log(e.target);
-    if(e.target.textContent == questions[currentQuestionNumber].correct) {
-        console.log("you are correct")
-        const correctAnswer = document.createElement("h3");
-        aSection.appendChild(correctAnswer);
-        correctAnswer.textContent = "You got it right!"
+    if (e.target.textContent == questions[currentQuestionNumber].correct) { //if the text content of the button clicked matches the text of the correct answer in that object
+        const correctAnswer = document.createElement("h2"); //create h2 element
+        aSection.appendChild(correctAnswer); //add h2 element to answer section
+        correctAnswer.textContent = "You got it right!"; //set text of h2
 
-    } else {
-        console.log("that's incorrect");
-        const incorrectAnswer = document.createElement("h3");
-        aSection.appendChild(incorrectAnswer);
-        incorrectAnswer.textContent = "You got it wrong!"
-        secondsLeft = secondsLeft-20;
-    }
-    nextButton = document.createElement("button");
-    nextButton.textContent = "Next Question";
-    aSection.appendChild(nextButton);
-    nextButton.addEventListener("click", nextQuestion);
-    questionAnswered = true;
+    } else { //if the button clicked text does not match
+        const incorrectAnswer = document.createElement("h2"); //create h2 element
+        aSection.appendChild(incorrectAnswer); //add h2 element to answer section
+        incorrectAnswer.textContent = "You got it wrong!"; //set text of h2
+        secondsLeft = secondsLeft - 20; //deduct 20 seconds from the countdown timer
+    };
+
+    nextButton = document.createElement("button"); //create button
+    nextButton.textContent = "Next Question"; //set button text
+    aSection.appendChild(nextButton); //add button to answer section
+    nextButton.addEventListener("click", nextQuestion); //when next button is clicked, call nextQuestion function
+    questionAnswered = true; //set questionAnswered to true
 }
 
-function nextQuestion(){
-    qSection.innerHTML = "";
-    aSection.innerHTML = "";
-    currentQuestionNumber++;
-    if(currentQuestionNumber==questions.length) {
-        endQuiz();
+function nextQuestion() {
+    qSection.innerHTML = ""; //remove content from question section
+    aSection.innerHTML = ""; //remove content from answer question
+    currentQuestionNumber++; //add 1 to current question to be used as index
+    if (currentQuestionNumber == questions.length) { //if current question number is equal to the number of question objects
+        endQuiz(); //call endQuiz function
     } else {
-        continueQuiz();
-    }
+        continueQuiz(); //if not, call continueQuiz function
+    };
 }
 
 function endQuiz() {
-    qSection.innerHTML = "";
-    aSection.innerHTML = "";
-    // TODO: deal with scoring
-    // timerSection.innerHTML = "";
-    console.log("quiz is ending");
-    quizEnded = true;
-    setScore();
+    qSection.innerHTML = ""; //remove content form question section
+    aSection.innerHTML = ""; //remove content from answer section
+    quizEnded = true; //set quizEnded to true
+    setScore(); //call setScore function
 }
 
-function setScore(){
-    const scoreNumber = document.createElement("h4");
-    scoreNumber.textContent = secondsLeft;
-    scoreSection.appendChild(scoreNumber);
-    timerSection.innerHTML = "";
-    const enterInitials = document.createElement("input");
-    scoreSection.appendChild(enterInitials);
-    const submitButton = document.createElement("button");
-    submitButton.innerHTML = "Submit";
-    scoreSection.appendChild(submitButton);
-    submitButton.addEventListener("click", initialSubmit);
-    function initialSubmit(e){
-        const initials = enterInitials.value;
-        const bob = {
+function setScore() {
+    const scoreNumber = document.createElement("h3"); //create h3 element
+    scoreNumber.textContent = secondsLeft; //set h3 element text to value in seconds left
+    scoreSection.appendChild(scoreNumber); //add h3 element to score section
+    timerSection.innerHTML = ""; //remove content from timerSection
+    const enterInitials = document.createElement("input"); //create input to type initials
+    scoreSection.appendChild(enterInitials); //add input to score section
+    const submitButton = document.createElement("button"); //create button
+    submitButton.innerHTML = "Submit"; //add text to button
+    scoreSection.appendChild(submitButton); //add button to score section
+    submitButton.addEventListener("click", initialSubmit); //when button is clicked, call initialSubmit function
+
+    function initialSubmit(e) {
+        const initials = enterInitials.value; //set variable with value of what was typed in input
+        const userScore = { //create object to store what was typed in input, and secondsleft on clock at end of quiz
             name: initials,
             score: secondsLeft
-        }
-        localStorage.setItem("lastHighscore", JSON.stringify(bob));
-        scoreSection.innerHTML="";
-        let highScoreList = [];
-        const oldHighScoreList = JSON.parse(localStorage.getItem("highscores"));
-        console.log(oldHighScoreList);
-        highScoreList.push(bob);
-        if(oldHighScoreList){
-            highScoreList = highScoreList.concat(oldHighScoreList);
-            localStorage.setItem("highscores", JSON.stringify(highScoreList))
-            console.log(highScoreList);
-        }
-        localStorage.setItem("highscores", JSON.stringify(highScoreList))
-        displayScores(); 
-    }
+        };
 
+        localStorage.setItem("lastHighscore", JSON.stringify(userScore)); //set userScore to local storage under lastHighscore
+        scoreSection.innerHTML = ""; //remove content from scoreSection
+        let highScoreList = []; //create variable with empty array to store list of high scores
+        const oldHighScoreList = JSON.parse(localStorage.getItem("highscores")); //set variable to value of local storage named "highscores"
+        highScoreList.push(userScore); //add userScore object to array
+        if (oldHighScoreList) { //if oldHighscoreList has content in it
+            highScoreList = highScoreList.concat(oldHighScoreList); //set highScoreList variable value to what is inside, and add oldHighScoreList to end of the array
+            localStorage.setItem("highscores", JSON.stringify(highScoreList)); //set highScoreList to local storage
+        };
+        localStorage.setItem("highscores", JSON.stringify(highScoreList)); //set highScoreList to local storage
+        displayScores(); //call function displayScores
+    };
 }
 
-function displayScores(){
-    console.log("display scores now")
-    const scoreData = JSON.parse(localStorage.getItem("lastHighscore"));
-    console.log(scoreData);
-    const finalScore = document.createElement("h5");
-    scoreSection.appendChild(finalScore);
-    finalScore.textContent = scoreData.name + ":" + scoreData.score;
+function displayScores() {
+    const scoreData = JSON.parse(localStorage.getItem("lastHighscore")); //retreive information from local storage under lastHighscore to a variable
+    const finalScore = document.createElement("h4"); //create h4 element
+    scoreSection.appendChild(finalScore); //add h4 element to scoreSection
+    finalScore.textContent = scoreData.name + " : " + scoreData.score; //set h4 element text to the value of name : score in scoreData variable
 }
 
-function goToHighScores(){
-    console.log(hScoreSection);
+function goToHighScores() {
+    if (hScoreSection.textContent.includes("Highscores:")) { //if hScoreSection text includes "Highscores:"
+        hScoreSection.textContent = ""; //set hScoreSection content to nothing
+    } else { 
+        hScoreSection.textContent = "Highscores:"; //set hScoreSection content to "Highscores:"
+        const scoreData = JSON.parse(localStorage.getItem("highscores")); //get highscores from local storage
+        if (scoreData) { //if there is content in scoreData
+            for (i = 0; i < scoreData.length; i++) { //loop to run the length of the scoreData array
+                const finalScore = document.createElement("h5"); //create h5 element
+                hScoreSection.appendChild(finalScore); //add h5 element to hScoreSection
+                finalScore.textContent = scoreData[i].name + " : " + scoreData[i].score; //set text content of h5 to the name and score in score data
+            };
 
-    console.log(hScoreSection.textContent.includes("Highscores:"))
-    //scoreSection.innerHTML = "This is some text";
-    if(hScoreSection.textContent.includes("Highscores:")){
-        console.log(true);
-        hScoreSection.textContent="";
-    } else {
-        console.log(false);
-        hScoreSection.textContent = "Highscores:";
-        const scoreData = JSON.parse(localStorage.getItem("highscores"));
-        console.log(scoreData);
-        // TODO: deal with this being an array
-        if(scoreData) {
-            for(i=0;i<scoreData.length;i++){
-            const finalScore = document.createElement("h5");
-            hScoreSection.appendChild(finalScore);
-            finalScore.textContent = scoreData[i].name + ":" + scoreData[i].score;
-        }
-        } 
-
-    }
+        } else { //
+            const finalScore = document.createElement("h5"); //create h5 element
+            hScoreSection.appendChild(finalScore); //add h5 element to hScoreSection
+            finalScore.textContent = "There are no highscores yet"; //set text to h5 element
+        };
+    };
 }
-
-    // if(hScoreSection.textContent){
-    //     hScoreSection.textContent = "Hi";
-    //     console.log("true");
-    // } else {
-    //     hScoreSection.textContent="";
-    //     console.log("false");
-    // }
-// }
-
-
-// function beginQuiz(){
-
-//     for(questionIndex=0;questionIndex<questions.length;questionIndex++) {
-//         console.log(questions[questionIndex]);
-//         console.log(questions[questionIndex].question);
-//         console.log(questions[questionIndex].answers);
-//         console.log(questions[questionIndex].correct);
-//         let correctAnswer = questions[questionIndex].correct;
-//         let answerArray = questions[questionIndex].answers;
-//         const question = document.createElement("div");
-//         qSection.appendChild(question);
-//         question.innerHTML = questions[questionIndex].question;
-        
-//         for(answerIndex=0;answerIndex<answerArray.length;answerIndex++){
-//             const answers = document.createElement("button");
-//             question.appendChild(answers);
-//             answers.innerHTML = answerArray[answerIndex];
-//             console.log(answerArray[answerIndex]);
-//         }
-//     }
-// }
