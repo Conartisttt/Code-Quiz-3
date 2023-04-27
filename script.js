@@ -51,19 +51,19 @@ const startButton = document.getElementById("start-button");
 const timerSection = document.getElementById("timer-section");
 const scoreSection = document.getElementById("score-section");
 const hScoreSection = document.getElementById("highscore-section");
+const seeHighscores = document.getElementById("highscore-button");
+const instructionSection = document.getElementById("instruction-section");
 
 startButton.addEventListener("click", startQuiz); //When start button is clicked, startQuiz function is called
 
 hScoreSection.innerHTML = ""; //set high score section text to nothing
 
-const seeHighscores = document.createElement("button"); //create button to see high scores
-seeHighscores.textContent = "See Highscores"; //add text to button
-hSection.appendChild(seeHighscores); //add button to html document
+ //create button to see high scores
 seeHighscores.addEventListener("click", goToHighScores); //when highscores button is clicked, call goToHighScores function
 
 let quizEnded = false; //set quiz end to false
 
-let secondsLeft = 180; //set time start countdown
+let secondsLeft = 100; //set time start countdown
 
 function setTime() {
     const timerInterval = setInterval(function () { //set function to a variable
@@ -77,7 +77,7 @@ function setTime() {
         } if (quizEnded) { //if quizEnded variable is set to true
             clearInterval(timerInterval); //stop the timer
         };
-        timerSection.textContent = secondsLeft + " seconds left"; //display text of timer on screen
+        timerSection.textContent = "Timer: " + secondsLeft + " seconds left"; //display text of timer on screen
     }, 1000); //this function will run every second (or 1000 milliseconds)
 };
 
@@ -93,15 +93,15 @@ function startQuiz() { //this is called when start quiz button is hit
 function continueQuiz() {
     questionAnswered = false; //set questionAnswered to false
     startButton.style.display = "none"; //remove startButton from screen
+    instructionSection.textContent = "";
     const cQuestionObj = questions[currentQuestionNumber]; //sets current question in object
-    const qDiv = document.createElement("div"); //create div for question
-    qSection.appendChild(qDiv); //add question to question section
     const qH1 = document.createElement("h1"); //add header element for question to display
-    qDiv.appendChild(qH1); //add header element to question div
+    qSection.appendChild(qH1); //add header element to question div
     qH1.textContent = cQuestionObj.question; //set header text content to display the current question
     for (i = 0; i < cQuestionObj.answers.length; i++) { //loop to repeat over the number of answers in the current question object
         const aBtn = document.createElement("button"); //create a button
-        qH1.appendChild(aBtn); //add button to h1 element with question displayed
+        aBtn.classList.add("btn", "btn-info", "mb-1", "answer-button")
+        qSection.appendChild(aBtn); //add button to h1 element with question displayed
         aBtn.textContent = cQuestionObj.answers[i]; //set text to button with answer text
         aBtn.addEventListener("click", answerButtonLister); //when you click the button, answerButtonListener is called
     };
@@ -113,18 +113,22 @@ function answerButtonLister(e) { //function with event to target
     }
     console.log(e.target);
     if (e.target.textContent == questions[currentQuestionNumber].correct) { //if the text content of the button clicked matches the text of the correct answer in that object
+        e.target.classList.remove("btn-info");
+        e.target.classList.add("btn-success");
         const correctAnswer = document.createElement("h2"); //create h2 element
         aSection.appendChild(correctAnswer); //add h2 element to answer section
         correctAnswer.textContent = "You got it right!"; //set text of h2
 
     } else { //if the button clicked text does not match
         const incorrectAnswer = document.createElement("h2"); //create h2 element
+        e.target.classList.add("btn-danger");
         aSection.appendChild(incorrectAnswer); //add h2 element to answer section
         incorrectAnswer.textContent = "You got it wrong!"; //set text of h2
         secondsLeft = secondsLeft - 20; //deduct 20 seconds from the countdown timer
     };
 
     nextButton = document.createElement("button"); //create button
+    nextButton.classList.add("btn", "btn-primary");
     nextButton.textContent = "Next Question"; //set button text
     aSection.appendChild(nextButton); //add button to answer section
     nextButton.addEventListener("click", nextQuestion); //when next button is clicked, call nextQuestion function
@@ -143,6 +147,7 @@ function nextQuestion() {
 }
 
 function endQuiz() {
+    timerSection.classList.add("hide-me");
     qSection.innerHTML = ""; //remove content form question section
     aSection.innerHTML = ""; //remove content from answer section
     quizEnded = true; //set quizEnded to true
@@ -151,18 +156,28 @@ function endQuiz() {
 
 function setScore() {
     const scoreNumber = document.createElement("h3"); //create h3 element
-    scoreNumber.textContent = secondsLeft; //set h3 element text to value in seconds left
+    scoreNumber.textContent = "Your Score: " + secondsLeft; //set h3 element text to value in seconds left
     scoreSection.appendChild(scoreNumber); //add h3 element to score section
     timerSection.innerHTML = ""; //remove content from timerSection
+    const inputDiv = document.createElement("div");
+    inputDiv.classList.add("input-group", "justify-content-center");
+    scoreSection.appendChild(inputDiv);
     const enterInitials = document.createElement("input"); //create input to type initials
-    scoreSection.appendChild(enterInitials); //add input to score section
+    enterInitials.setAttribute("placeholder", "Enter Initials");
+    enterInitials.setAttribute("maxlength", "3");
+    inputDiv.appendChild(enterInitials); //add input to score section
     const submitButton = document.createElement("button"); //create button
+    submitButton.classList.add("btn", "btn-primary");
     submitButton.innerHTML = "Submit"; //add text to button
-    scoreSection.appendChild(submitButton); //add button to score section
+    inputDiv.appendChild(submitButton); //add button to score section
     submitButton.addEventListener("click", initialSubmit); //when button is clicked, call initialSubmit function
 
     function initialSubmit(e) {
         const initials = enterInitials.value; //set variable with value of what was typed in input
+        if (!initials) {
+            alert("You must enter your initials!");
+            return;
+        } 
         const userScore = { //create object to store what was typed in input, and secondsleft on clock at end of quiz
             name: initials,
             score: secondsLeft
@@ -192,7 +207,11 @@ function displayScores() {
 function goToHighScores() {
     if (hScoreSection.textContent.includes("Highscores:")) { //if hScoreSection text includes "Highscores:"
         hScoreSection.textContent = ""; //set hScoreSection content to nothing
+        seeHighscores.classList.remove("btn-secondary");
+        seeHighscores.classList.add("btn-warning");
     } else { 
+        seeHighscores.classList.remove("btn-warning");
+        seeHighscores.classList.add("btn-secondary");
         hScoreSection.textContent = "Highscores:"; //set hScoreSection content to "Highscores:"
         const scoreData = JSON.parse(localStorage.getItem("highscores")); //get highscores from local storage
         if (scoreData) { //if there is content in scoreData
