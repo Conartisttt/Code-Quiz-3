@@ -1,46 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./media.css">
+
     <title>Document</title>
 </head>
+
 <body>
 
-    <section id="header-section">
+    <header id="header-section">
+        <h1 class="d-flex justify-content-center m-3">
+            Code Quiz
+        </h1>
+    </header>
+
+    <div class="d-flex flex-column align-items-center m-3">
+
+        <button id="highscore-button" class="btn btn-warning">
+            See Highscores!
+        </button>
+
+        <div class="d-flex ">
+            <div id="timer-section">
+                Timer:
+            </div>
+        </div>
+
+    </div>
+
+    <section id="instruction-section" class="d-flex justify-content-center">
+        <p>
+            In this quiz you will be asked a series of questions about JavaScript
+            <br>
+            You will have two minutes to complete this quiz
+            <br>
+            Every time you answer a question incorrectly, you will be penalized
+        </p>
+    </section>
+
+    <section id="score-section" class="d-flex flex-column align-items-center">
+    </section>
+
+    <section id="start-section" class="d-flex justify-content-center m-2">
+        <button id="start-button" class="btn btn-primary">Start</button>
+    </section>
+
+    <section id="question-section" class="d-flex flex-column align-items-center">
 
     </section>
 
-    <section id="highscore-section">
+    <section id="answer-section" class="d-flex flex-column align-items-center m-2">
 
     </section>
 
-    <section id="instruction-section">
-
-    </section>
-    <section id="timer-section">
-
-    </section>
-    <section id="score-section">
-
-    </section>
-    <section id="start-section">
-        <button id="start-button">Start</button>
-    </section>
-
-    <section id="question-section">
-
-    </section>
-
-    <section id="answer-section">
-
-    </section>
+    <div id="highscore-section" class="d-flex flex-column align-items-center m-2"></div>
 
 
-    
+
     <script src="./script.js"></script>
 </body>
+
 </html>

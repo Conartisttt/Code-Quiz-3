@@ -1,3 +1,13 @@
-.hideme {
+body{
+    margin:20px;
+}
+
+
+.hide-me {
     display: none;
-};
+}
+
+.answer-buttons {
+font-size: 30px;
+}
+
