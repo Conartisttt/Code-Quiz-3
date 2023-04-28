@@ -63,7 +63,7 @@ seeHighscores.addEventListener("click", goToHighScores); //when highscores butto
 
 let quizEnded = false; //set quiz end to false
 
-let secondsLeft = 100; //set time start countdown
+let secondsLeft = 120; //set time start countdown
 
 function setTime() {
     const timerInterval = setInterval(function () { //set function to a variable

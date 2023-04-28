@@ -4,7 +4,7 @@
 
 This application is a timed coding quiz with multiple choice questions. In this project, no starter code was provided.
 
-* **The final result can be found here:** [Code-Quiz](link to deployed webiste here)
+* **The final result can be found here:** [Code-Quiz](https://conartisttt.github.io/Code-Quiz-3/)
 
 ## Features
 
@@ -26,6 +26,7 @@ This application is a timed coding quiz with multiple choice questions. In this 
 
 * HTML
 * CSS
+* Bootstrap
 * JavaScript
 
 ## Credits
